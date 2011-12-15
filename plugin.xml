@@ -23,4 +23,10 @@
             viewId="org.jcryptool.visual.des.view.DesView">
       </Visual>
    </extension>
+   <extension
+         point="org.eclipse.help.toc">
+   </extension>
+   <extension
+         point="org.eclipse.help.contexts">
+   </extension>
 </plugin>

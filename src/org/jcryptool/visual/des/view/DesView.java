@@ -3,14 +3,8 @@ package org.jcryptool.visual.des.view;
 
 
 
-import java.util.Vector;
-
-import javax.swing.JTable;
-import javax.swing.table.TableCellRenderer;
-
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
-import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.widgets.Button;
@@ -36,10 +30,7 @@ import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.graphics.Point;
-import org.jcryptool.visual.des.algorithm.CustomTableCellRenderer;
 import org.jcryptool.visual.des.algorithm.DESController;
-import org.jcryptool.visual.des.algorithm.Data;
 import java.util.Date;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -517,7 +508,7 @@ public class DesView extends ViewPart {
 		tfAlgOutput = new TabFolder(grpAlgOutput, SWT.NONE);
 		
 		tbtmAlgM0M17 = new TabItem(tfAlgOutput, SWT.NONE);
-		tbtmAlgM0M17.setText("m[0] - m[17]");
+		tbtmAlgM0M17.setText("RoundCiphers");
 		
 		Composite comAlgOutputM0M17 = new Composite(tfAlgOutput, SWT.NONE);
 		tbtmAlgM0M17.setControl(comAlgOutputM0M17);
@@ -754,7 +745,7 @@ public class DesView extends ViewPart {
 		fd_lblAlgInfoKey.top = new FormAttachment(lblAlgInfoDes,10);
 		fd_lblAlgInfoKey.left = new FormAttachment(0, 10);
 		lblAlgInfoKey.setLayoutData(fd_lblAlgInfoKey);
-		lblAlgInfoKey.setText("Key:\nThe Key K used to encrypt or decrypt\n" +
+		lblAlgInfoKey.setText("Key:\nThe Key k used to encrypt or decrypt\n" +
 							  "the data.");
 		/*
 		lblAlgInfoData = new Label(grpAlgInformation,SWT.NONE);
@@ -772,12 +763,13 @@ public class DesView extends ViewPart {
 		fd_lblAlgInfoTableM0M17.top = new FormAttachment(lblAlgInfoKey,10);
 		fd_lblAlgInfoTableM0M17.left = new FormAttachment(0, 10);
 		lblAlgInfoTableM0M17.setLayoutData(fd_lblAlgInfoTableM0M17);
-		lblAlgInfoTableM0M17.setText("Output Table \"M0-M17\":\nThe table shows the intermediate\n" +
-									"results m[0] to m[17]. If the color of a bit\n" +
-									"is red, then the bit differs from the bit\n" +
-									"at the same position of the previous round. \n" +
-									"The column DIST presents the Hamming\n" +
-									"distance between rows m[i] and m[i-1].");
+		lblAlgInfoTableM0M17.setText("Output Table \"RoundCiphers\":\n" +
+									"The table shows the intermediate round\n" +
+									"ciphers m[0]-m[17] for the same process\n" +
+									"(en-/decryption).\n" +
+									"For each column: Adjacent bit-colors \n" +
+									"change iff adjacent bit-values change.");
+									
 									
 		lblAlgInfoTableDeskpei = new Label(grpAlgInformation,SWT.NONE);
 		FormData fd_lblAlgInfoTableDeskpei = new FormData();
@@ -785,10 +777,13 @@ public class DesView extends ViewPart {
 		fd_lblAlgInfoTableDeskpei.top = new FormAttachment(lblAlgInfoTableM0M17,10);
 		fd_lblAlgInfoTableDeskpei.left = new FormAttachment(0, 10);
 		lblAlgInfoTableDeskpei.setLayoutData(fd_lblAlgInfoTableDeskpei);
-		lblAlgInfoTableDeskpei.setText("Output Table \"DES(K,P+E_i)\":\nPlaintext P and P+E_i differ at position i in\n" +
-									   "1 bit. Each DES(K; P+E_i) with i=1, ..., 64 is\n" +
-									   "evaluated and compared with DES(K,P)\n" +
-									   "using the Hamming distance DIST as \nmeasure.");
+		lblAlgInfoTableDeskpei.setText("Output Table \"DES(K,p+e_i)\":\n" +
+									   "For i = 1, ..., 64: Plaintexts p and p+e_i\n" +
+									   "differ at position i by one bit.\n" +
+									   "Each DES(k; p+e_i) is presented and\n" +
+									   "compared with DES(k,p) using the\n" +
+									   "Hamming distance DIST as measure.");
+									   
 		
 		lblAlgInfoTableRoundkeys = new Label(grpAlgInformation,SWT.NONE);
 		FormData fd_lblAlgInfoTableRoundkeys = new FormData();
@@ -796,7 +791,7 @@ public class DesView extends ViewPart {
 		fd_lblAlgInfoTableRoundkeys.top = new FormAttachment(lblAlgInfoTableDeskpei,10);
 		fd_lblAlgInfoTableRoundkeys.left = new FormAttachment(0, 10);
 		lblAlgInfoTableRoundkeys.setLayoutData(fd_lblAlgInfoTableRoundkeys);
-		lblAlgInfoTableRoundkeys.setText("Output Table \"Roundkeys\":\nThe table shows the 16 roundkeys.\n");
+		lblAlgInfoTableRoundkeys.setText("Output Table \"Roundkeys\":\nThe table shows the 16 round keys.\n");
 		
 		lblAlgInfoTableCDMatrix = new Label(grpAlgInformation,SWT.NONE);
 		FormData fd_lblAlgInfoTableCDMatrix = new FormData();
@@ -804,8 +799,10 @@ public class DesView extends ViewPart {
 		fd_lblAlgInfoTableCDMatrix.top = new FormAttachment(lblAlgInfoTableRoundkeys,10);
 		fd_lblAlgInfoTableCDMatrix.left = new FormAttachment(0, 10);
 		lblAlgInfoTableCDMatrix.setLayoutData(fd_lblAlgInfoTableCDMatrix);
-		lblAlgInfoTableCDMatrix.setText("Output Table \"CD-Matrix\":\nThe elements of the table are used to\n" +
-									"compute the roundkeys");
+		lblAlgInfoTableCDMatrix.setText("Output Table \"CD-Matrix\":\n" +
+										"Round key k_i is generated from C[i], D[i]\n" +
+										"by cyclic operations combined with\n" +
+										"specific bit-selections.");
 		
 		// Action Buttons
 		btnAlgReset = new Button(comAlgMain, SWT.NONE);
@@ -964,7 +961,7 @@ public class DesView extends ViewPart {
 	
 	private void createFPointsTab() {
 		tabFPoints = new TabItem(tfolder,SWT.NONE);
-		tabFPoints.setText("Anti-/Fixed Point Study");
+		tabFPoints.setText("Anti- / Fix Point Study");
 		   
 		// Tab Layout    
 		comFPoints = new Composite(tfolder,SWT.NONE);
@@ -1054,16 +1051,16 @@ public class DesView extends ViewPart {
 		
 		btnFPointsFixedpoint = new Button(comFPointsInputTarget, SWT.RADIO);
 		btnFPointsFixedpoint.setBounds(0, 20, 87, 22);
-		btnFPointsFixedpoint.setText("Fixed Point");
+		btnFPointsFixedpoint.setText("Fixed-Point");
 		btnFPointsFixedpoint.setSelection(true);
 		
 		btnFPointsFixedpoint.addSelectionListener(new SelectionAdapter(){
 			public void widgetSelected(SelectionEvent e) {
-				btnFPointsK0.setText("K[0]");
-				btnFPointsK1.setText("K[10]");
-				btnFPointsK2.setText("K[5]");
-				btnFPointsK3.setText("K[15]");
-				lblFPointsOutputAFPoint.setText("Fixed Point: x");
+				btnFPointsK0.setText("k[0]");
+				btnFPointsK1.setText("k[10]");
+				btnFPointsK2.setText("k[5]");
+				btnFPointsK3.setText("k[15]");
+				lblFPointsOutputAFPoint.setText("Fixed-Point: x");
 				
 			}
 		});
@@ -1071,15 +1068,15 @@ public class DesView extends ViewPart {
 		
 		btnFPointsAntifixedPoint = new Button(comFPointsInputTarget, SWT.RADIO);
 		btnFPointsAntifixedPoint.setBounds(0, 40, 108, 22);
-		btnFPointsAntifixedPoint.setText("Anti-Fixed Point");
+		btnFPointsAntifixedPoint.setText("Anti-Fixed-Point");
 		
 		btnFPointsAntifixedPoint.addSelectionListener(new SelectionAdapter(){
 			public void widgetSelected(SelectionEvent e) {
-				btnFPointsK0.setText("K[3]");
-				btnFPointsK1.setText("K[9]");
-				btnFPointsK2.setText("K[6]");
-				btnFPointsK3.setText("K[11]");
-				lblFPointsOutputAFPoint.setText("Anti-Fixed Point: x");
+				btnFPointsK0.setText("k[3]");
+				btnFPointsK1.setText("k[9]");
+				btnFPointsK2.setText("k[6]");
+				btnFPointsK3.setText("k[11]");
+				lblFPointsOutputAFPoint.setText("Anti-Fixed-Point: x");
 				
 			}
 		});
@@ -1198,10 +1195,10 @@ public class DesView extends ViewPart {
 		fd_lblFPointsInfoDes.top = new FormAttachment(0,10);
 		fd_lblFPointsInfoDes.left = new FormAttachment(0, 10);
 		lblFPointsInfoDes.setLayoutData(fd_lblFPointsInfoDes);
-		lblFPointsInfoDes.setText("A fixed-point F with respect to a key K\n" +
-								  "satisfies DES(K;F) = F, whereas an\n"+
-								  "anti-fixed-point A with respect to a key K\n" +
-								  "satisfies DES(K;A) = com_A. The result\n" + 
+		lblFPointsInfoDes.setText("A fixed-point F with respect to a key k\n" +
+								  "is defined by DES(k;F) = F, whereas an\n"+
+								  "anti-fixed-point A with respect to a key k\n" +
+								  "is defined by DES(k;A) = com_A. The result\n" + 
 								  "com_A is the bitwise complement of A.\n");
 	
 		lblFPointsInfoKey = new Label(grpFPointsInformation,SWT.NONE);
@@ -1210,8 +1207,11 @@ public class DesView extends ViewPart {
 		fd_lblFPointsInfoKey.top = new FormAttachment(lblFPointsInfoDes,10);
 		fd_lblFPointsInfoKey.left = new FormAttachment(0, 10);
 		lblFPointsInfoKey.setLayoutData(fd_lblFPointsInfoKey);
-		lblFPointsInfoKey.setText("Key:\nThe Key K used to compute the\n" +
-								  "fixed/anti-fixed point.");
+		lblFPointsInfoKey.setText("Key:\n" +
+								"So far known, fixed-points (resp.\n" +
+								"anti-fixed-points) only exist with respect\n" +
+								"to the special keys k[0],k[5],k[10], and\n" +
+								"k[15] (resp. k[3],k[6],k[9], and k[11]).");
 			
 		lblFPointsInfoM8 = new Label(grpFPointsInformation,SWT.NONE);
 		FormData fd_lblFPointsInfoM8 = new FormData();
@@ -1219,8 +1219,12 @@ public class DesView extends ViewPart {
 		fd_lblFPointsInfoM8.top = new FormAttachment(lblFPointsInfoKey,10);
 		fd_lblFPointsInfoM8.left = new FormAttachment(0, 10);
 		lblFPointsInfoM8.setLayoutData(fd_lblFPointsInfoM8);
-		lblFPointsInfoM8.setText("m[i]:\ni-th intermediate result of an encryption\n" +
-								 "or decryption process.");
+		lblFPointsInfoM8.setText("m[i]:\n" +
+								"The i-th intermediate round cipher of\n" +
+								"en-/decryption process. The value m[8]\n" +
+								"is user-defined due to the way, the\n" +
+								"appropriate (anti-)fixed-points are\n" +
+								"internally evaluated.");
 						
 		lblFPointsInfoTable = new Label(grpFPointsInformation,SWT.NONE);
 		FormData fd_lblFPointsInfoTable = new FormData();
@@ -1228,13 +1232,17 @@ public class DesView extends ViewPart {
 		fd_lblFPointsInfoTable.top = new FormAttachment(lblFPointsInfoM8,10);
 		fd_lblFPointsInfoTable.left = new FormAttachment(0, 10);
 		lblFPointsInfoTable.setLayoutData(fd_lblFPointsInfoTable);
-		lblFPointsInfoTable.setText("Output Table:\nThe table shows the 32 bits wide\n" +
-									"intermediate results from m[8] to m[17]. If\n" +
-									"the color of a bit is red, then the bit\n" +
-									"differs from the bit at the same position of\n" +
-									"the previous round. The column DIST\n" +
-									"presents the Hamming distance between\n " +
-									"the rows m[i] and m[i-1].");
+		lblFPointsInfoTable.setText("Output Table:\n" +
+								"The table only shows the 32 bit wide\n" +
+								"round ciphers from m[8] to m[17],\n" +
+								"since missing m[i] can be retrieved\n" +
+								"using the relation m[i] = m[17-i] for\n" +
+								"fixed-points (resp. m[i] = com_m[17-i]\n" +
+								"for anti-fixed-points). For each column:\n" +
+								"Adjacent bit-colors change iff their\n" +
+								"bit-values change. The column DIST\n" +
+								"reflects the Hamming distance between\n" +
+								"rows m[i-1] and m[i].");
 		
 		// Action Buttons
 		btnFPointsReset = new Button(comFPointsMain, SWT.NONE);
@@ -1422,7 +1430,7 @@ public class DesView extends ViewPart {
 		
 		lblSBoxInputDeltap = new Label(comSBoxInput, SWT.NONE);
 		lblSBoxInputDeltap.setBounds(0, 19, 181, 15);
-		lblSBoxInputDeltap.setText("Delta_P (16 HexDigits):");
+		lblSBoxInputDeltap.setText("Delta_p (16 HexDigits):");
 		
 		lblSBoxInputDeltapCur = new Label(comSBoxInput, SWT.NONE);
 		lblSBoxInputDeltapCur.setBounds(185, 43, 50, 20);
@@ -1516,11 +1524,11 @@ public class DesView extends ViewPart {
 		
 		lblSBoxOutputP = new Label(grpSBoxOutput, SWT.NONE);
 		lblSBoxOutputP.setBounds(300, 80, 200, 20);
-		lblSBoxOutputP.setText("Random P: x");
+		lblSBoxOutputP.setText("Random p: x");
 		
 		lblSBoxOutputK = new Label(grpSBoxOutput, SWT.NONE);
 		lblSBoxOutputK.setBounds(300,110,200,20);
-		lblSBoxOutputK.setText("Random K: x");
+		lblSBoxOutputK.setText("Random k: x");
 		
 		// Information Tab
 		lblSBoxInfoDes = new Label(grpSBoxInformation,SWT.NONE);
@@ -1529,14 +1537,20 @@ public class DesView extends ViewPart {
 		fd_lblSboxInfoDes.top = new FormAttachment(0,10);
 		fd_lblSboxInfoDes.left = new FormAttachment(0, 10);
 		lblSBoxInfoDes.setLayoutData(fd_lblSboxInfoDes);
-		lblSBoxInfoDes.setText("Consider a plaintext P and \n" +
-							   "a plaintext P + Delta_P that undergo an\n" +
-							   "encryption. Each of these two plaintexts\n" +
-							   "generates in each of the sixteen rounds\n" +
-							   "inputs for the eight S-Boxes S1, ..., S8.\n" +
-							   "The matrix visualizes by its colors whether\n" +
-							   "these inputs are (per round and per S-Box)\n" +
-							   "the same (yellow) or not the same (red).");
+		lblSBoxInfoDes.setText("A (randomly selected) plaintext p\n" +
+					"and another plaintext p + Delta_p\n" +
+					"undergo an encryption under the\n" +
+					"same (randomly selected) key k.\n" +
+					"Each of these plaintexts generates\n" +
+					"inputs in each of the 16 rounds for the 8\n" +
+					"S-Boxes S1, ..., S8. The 16 x 8 matrix\n" +
+					"visualizes by its cell colors whether\n" +
+					"these inputs are (per round and per\n" +
+					"S-Box) the same (yellow) or not the\n" +
+					"same (red). Hence the overall color\n" +
+					"pattern reflects the spread (avalanche)\n" +
+					"of the input-difference Delta_p over\n" +
+					"the whole encryption process.");
 		
 		lblSBoxInfoDeltap = new Label(grpSBoxInformation,SWT.NONE);
 		FormData fd_lblSBoxInfoDeltap = new FormData();
@@ -1544,7 +1558,7 @@ public class DesView extends ViewPart {
 		fd_lblSBoxInfoDeltap.top = new FormAttachment(lblSBoxInfoDes,10);
 		fd_lblSBoxInfoDeltap.left = new FormAttachment(0, 10);
 		lblSBoxInfoDeltap.setLayoutData(fd_lblSBoxInfoDeltap);
-		lblSBoxInfoDeltap.setText("Delta_P:\nDifference between the two inputs.");
+		lblSBoxInfoDeltap.setText("Delta_p:\nDifference between the two inputs.");
 		
 		lblSBoxInfoRandomP = new Label(grpSBoxInformation,SWT.NONE);
 		FormData fd_lblSBoxInfoRandomP = new FormData();
@@ -1552,7 +1566,7 @@ public class DesView extends ViewPart {
 		fd_lblSBoxInfoRandomP.top = new FormAttachment(lblSBoxInfoDeltap,10);
 		fd_lblSBoxInfoRandomP.left = new FormAttachment(0, 10);
 		lblSBoxInfoRandomP.setLayoutData(fd_lblSBoxInfoRandomP);
-		lblSBoxInfoRandomP.setText("Random P:\nA randomly choosen plaintext");
+		lblSBoxInfoRandomP.setText("Random p:\nA randomly choosen plaintext");
 				
 		lblSBoxInfoRandomK = new Label(grpSBoxInformation,SWT.NONE);
 		FormData fd_lblSBoxInfoRandomK = new FormData();
@@ -1560,7 +1574,7 @@ public class DesView extends ViewPart {
 		fd_lblSBoxInfoRandomK.top = new FormAttachment(lblSBoxInfoRandomP,10);
 		fd_lblSBoxInfoRandomK.left = new FormAttachment(0, 10);
 		lblSBoxInfoRandomK.setLayoutData(fd_lblSBoxInfoRandomK);
-		lblSBoxInfoRandomK.setText("Random K:\nA randomly choosen key.");
+		lblSBoxInfoRandomK.setText("Random k:\nA randomly choosen key.");
 		
 		lblSBoxInfoYBox = new Label(grpSBoxInformation,SWT.NONE);
 		FormData fd_lblSBoxInfoYBox = new FormData();
@@ -1734,7 +1748,7 @@ public class DesView extends ViewPart {
 		Display display = null;
 		Color yellow = null;
 		Color red = null;
-		Color blue = null;
+		Color blue=null;
 		Color gray =null;
 		Color curColor = null;
 		int i=0,j=0;

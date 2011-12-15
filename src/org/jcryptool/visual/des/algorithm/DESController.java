@@ -1,13 +1,6 @@
 package org.jcryptool.visual.des.algorithm;
 
 import java.util.ArrayList;
-import java.util.Vector;
-
-import javax.swing.JOptionPane;
-import javax.swing.JTable;
-import javax.swing.table.TableCellRenderer;
-
-import org.eclipse.swt.widgets.Table;
 import org.jcryptool.visual.des.algorithm.DESModel;
 
 public class DESController {
