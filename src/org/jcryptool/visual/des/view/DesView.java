@@ -551,7 +551,7 @@ public class DesView extends ViewPart {
 		
 		
 		tbtmAlgDES = new TabItem(tfAlgOutput, SWT.NONE);
-		tbtmAlgDES.setText("DES(K,P+E_i)");
+		tbtmAlgDES.setText("DES(k,p+e_i)");
 		
 		comAlgOutputDeskpei = new Composite(tfAlgOutput, SWT.NONE);
 		tbtmAlgDES.setControl(comAlgOutputDeskpei);
@@ -651,7 +651,7 @@ public class DesView extends ViewPart {
 		Label tblAlgOutputHammingDes = new Label(comAlgOutputHamming, SWT.NONE);
 		tblAlgOutputHammingDes.setBounds(30, 230, 700, 40);
 		tblAlgOutputHammingDes.setText("The matrices A and B visualizes Hamming distances between " +
-									   "DES(K,Input_1) and DES(K,Input_2)\n where Input_1,Input_2 have a " +
+									   "DES(k,Input_1) and DES(k,Input_2)\n where Input_1,Input_2 have a " +
 									   "Hamming distance of 1 (for A) and 2 (for B).\n");
 		
 		// Roundkeys
@@ -777,7 +777,7 @@ public class DesView extends ViewPart {
 		fd_lblAlgInfoTableDeskpei.top = new FormAttachment(lblAlgInfoTableM0M17,10);
 		fd_lblAlgInfoTableDeskpei.left = new FormAttachment(0, 10);
 		lblAlgInfoTableDeskpei.setLayoutData(fd_lblAlgInfoTableDeskpei);
-		lblAlgInfoTableDeskpei.setText("Output Table \"DES(K,p+e_i)\":\n" +
+		lblAlgInfoTableDeskpei.setText("Output Table \"DES(k,p+e_i)\":\n" +
 									   "For i = 1, ..., 64: Plaintexts p and p+e_i\n" +
 									   "differ at position i by one bit.\n" +
 									   "Each DES(k; p+e_i) is presented and\n" +
